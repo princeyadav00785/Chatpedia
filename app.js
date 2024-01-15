@@ -12,16 +12,35 @@ app.get("/", function (req, res) {
   res.sendFile(indexPath);
 });
 
+var clients = 0;
+
 // Whenever someone connects, this gets executed
 io.on("connection", function (socket) {
   console.log("A user connected");
-  // Send a message after a timeout of 4seconds
-  setTimeout(function () {
-    socket.send("Sent a message 4seconds after connection!");
-  }, 4000);
+  clients++;
+
+  // Send a message after a timeout of 4 seconds
+  // setTimeout(function () {
+  //   socket.send("Sent a message 4 seconds after connection!");
+  //   socket.emit("testerEvent", {
+  //     description: "A custom event named testerEvent!",
+  //   });
+  // }, 4000);
+
+  // For broadcasting to all connected users..
+  io.sockets.emit("broadcast", {
+    description: clients + " clients connected!",
+  });
+
   // Whenever someone disconnects, this piece of code executed
   socket.on("disconnect", function () {
+    clients--;
     console.log("A user disconnected");
+
+    // Broadcasting the updated client count after decrementing
+    io.sockets.emit("broadcast", {
+      description: clients + " clients connected!",
+    });
   });
 });
 

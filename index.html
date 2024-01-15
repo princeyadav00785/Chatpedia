@@ -1,10 +1,27 @@
 <!DOCTYPE html>
 <html>
-   <head><title>Hello world</title></head>
-   <script src="/socket.io/socket.io.js"></script>
-   <script>
-      var socket = io();
-      socket.on('message', function(data){document.write(data)});
-   </script>
-   <body>Hello world</body>
+   <head>
+      <title>Hello world</title>
+      <script src="/socket.io/socket.io.js"></script>
+   </head>
+   <body>
+      <h1>Hello world</h1>
+      <script>
+         var socket = io();
+
+         // Listen for the 'broadcast' event from the server
+         socket.on('broadcast', function (data) {
+            document.body.innerHTML = '<h2>' + data.description + '</h2>';
+         });
+
+         // Uncomment the following lines to handle other events
+         // socket.on('message', function (data) {
+         //    document.write(data);
+         // });
+
+         // socket.on('testerEvent', function (data) {
+         //    document.write(data.description);
+         // });
+      </script>
+   </body>
 </html>
