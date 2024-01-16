@@ -1,4 +1,110 @@
 <!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="stylesheet" href="styles.css">
+  <!-- Include styles specific to the navbar and footer -->
+  <link rel="stylesheet" href="navbar.css">
+  <link rel="stylesheet" href="footer.css">
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chatting App</title>
+  <script src="/socket.io/socket.io.js"></script>
+  <style>
+    /* Your existing styles... */
+  </style>
+</head>
+
+<body>
+  <!-- Include the navbar -->
+  <div id="navbar-container" class="navbar-container"></div>
+
+  <h1>Chatting App</h1>
+  <div id="error-container"></div>
+  <input id="name" type="text" name="name" value="" placeholder="Enter your name">
+  <button type="button" name="button" onclick="setUsername()">Let's chat!</button>
+
+  <div id="chat-container">
+    <div id="message-container"></div>
+    <input id="message" type="text" name="message" placeholder="Type your message...">
+    <button id="send-button" type="button" name="button" onclick="sendMessage()">Send</button>
+
+    <!-- Include the footer -->
+    <div id="footer-container" class="footer-container"></div>
+  </div>
+
+  <script>
+    var socket = io();
+    var user;
+
+    function setUsername() {
+      document.getElementById('error-container').innerHTML = '';
+
+      var nameInput = document.getElementById('name');
+      if (nameInput.value.trim() === "") {
+        document.getElementById('error-container').innerHTML = 'Please enter a valid username.';
+      } else {
+        socket.emit('setUsername', nameInput.value.trim());
+      }
+    }
+
+    socket.on('userExists', function (data) {
+      document.getElementById('error-container').innerHTML = data;
+    });
+
+    socket.on('userSet', function (data) {
+      user = data.username;
+      document.getElementById('chat-container').style.display = 'block';
+      document.getElementById('name').setAttribute('disabled', 'disabled');
+    });
+
+    socket.on('updateUsers', function (data) {
+      // Update the list of online users
+      var usersList = document.getElementById('users-list');
+      usersList.innerHTML = '<b>Online Users:</b><br>' + data.join('<br>');
+    });
+
+    function sendMessage() {
+      var messageInput = document.getElementById('message');
+      var message = messageInput.value.trim();
+
+      if (message !== "") {
+        socket.emit('msg', { message: message });
+        messageInput.value = ''; // Clear the message input field
+      }
+    }
+
+    socket.on('newmsg', function (data) {
+      if (user) {
+        var messageContainer = document.getElementById('message-container');
+        var messageDiv = document.createElement('div');
+        messageDiv.innerHTML = '<b>' + data.user + '</b>: ' + data.message;
+        messageContainer.appendChild(messageDiv);
+
+        // Scroll to the bottom of the message container
+        messageContainer.scrollTop = messageContainer.scrollHeight;
+      }
+    });
+  </script>
+
+  <!-- Add this div for displaying online users -->
+  <div id="users-list"></div>
+
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+<!-- Code  for understanding purpose only -->
+
+<!-- <!DOCTYPE html>
 <html>
    <head>
       <title>Hello world</title>
@@ -24,4 +130,4 @@
          // });
       </script>
    </body>
-</html>
+  </html> -->

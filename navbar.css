@@ -1,0 +1,40 @@
+/* navbar.css */
+
+.navbar {
+  background-color: #34495e;
+  padding: 15px 0;
+  color: #ecf0f1;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  color: #ecf0f1;
+}
+
+.nav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+.nav-list li {
+  margin-right: 20px;
+}
+
+.nav-list a {
+  text-decoration: none;
+  color: #ecf0f1;
+  font-weight: bold;
+  font-size: 18px;
+  transition: color 0.3s ease;
+}
+
+.nav-list a:hover {
+  color: #e74c3c;
+}
